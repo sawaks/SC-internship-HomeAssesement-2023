@@ -5,6 +5,15 @@ import (
 	"github.com/gofrs/uuid"
 )
 
+// My sugestions for improvement the code:
+// fix issues that prevent the code from running - such as removing unused variables
+// have better naming conventions as its quite confusing at the moment
+// try to run the code after that
+// add proper error handling
+// create unit tests for the functions
+// the first loop seems to be unnecessary as its just copying the data from a pointer to a value and then back to a pointer again - I believe we can remove this for improving performance
+// the second loop also seems unnecessary and it seems to be wrong as it reuses the loop variable address which can leap to all elements in 'fp' pointing to the same instance
+
 // The function GetAllFolders takes a FetchFolderRequest as a parameter and returns a FetchFolderResponse and an error.
 func GetAllFolders(req *FetchFolderRequest) (*FetchFolderResponse, error) {
 
