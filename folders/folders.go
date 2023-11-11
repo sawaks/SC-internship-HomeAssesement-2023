@@ -14,56 +14,31 @@ import (
 // the first loop seems to be unnecessary as its just copying the data from a pointer to a value and then back to a pointer again - I believe we can remove this for improving performance
 // the second loop also seems unnecessary and it seems to be wrong as it reuses the loop variable address which can leap to all elements in 'fp' pointing to the same instance
 
-// The function GetAllFolders takes a FetchFolderRequest as a parameter and returns a FetchFolderResponse and an error.
+// This function retrieves all folders related to an organization ID returning in the response and error.
 func GetAllFolders(req *FetchFolderRequest) (*FetchFolderResponse, error) {
-
-	// It set the variable for err (is error), f1(is Folder ) and fs (is a slice of Folder pointer).
-	var (
-		err error
-		f1  Folder
-		fs  []*Folder
-	)
-
-	// It set the variable named f is an empty slice.
-	f := []Folder{}
-
-	// It call the function FetchAllFoldersByOrgID with OrgId provided in req parameter.
-	r, _ := FetchAllFoldersByOrgID(req.OrgID)
-
-	// With a for loop, r(is the result of FetchAllFoldersByOrgID) is iterated and appended each folder to the f slice.
-	for k, v := range r {
-		f = append(f, *v)
+	// Fetch all folders by organization ID and handle any errors
+	folders, err := FetchAllFoldersByOrgID(req.OrgID)
+	if err != nil {
+		// Return the error to the caller
+		return nil, err
 	}
 
-	// It set the variable named fp that is an empty slice of Folder pointers.
-	var fp []*Folder
-
-	// It appends pointers to the folders from f to fp.
-	for k1, v1 := range f {
-		fp = append(fp, &v1)
-	}
-	// It set the variable named ffr is the FetchFolderResponse pointers and assigns it a value by creating a FetchFolderResponse struct with the fp slice.
-	var ffr *FetchFolderResponse
-	ffr = &FetchFolderResponse{Folders: fp}
-	// It returns ffr and a nil error, indicating a successful execution of the function.
+	ffr := &FetchFolderResponse{Folders: folders}
 	return ffr, nil
 }
 
-// The function FetchAllFoldersByOrgID takes an orgID of type UUID as a parameter and returns a slice of Folder pointers and an error.
+// This function retrieves all Folder instances that match an organization ID.
 func FetchAllFoldersByOrgID(orgID uuid.UUID) ([]*Folder, error) {
+	folders := GetSampleData() // Calls function that return a sample set of folder data.
 
-	// It set the variable named folders contains the function GetSampleData.
-	folders := GetSampleData()
+	resFolder := []*Folder{} // Initializes a slice to hold points to the Folder structs.
 
-	// It set the variable named resFolder is the slice of Folder pointers.
-	resFolder := []*Folder{}
-
-	// While folders iterated, if orgId belong to folder equale to orgID, it appends folder to resFolder.
+	// Iterates over folders.
 	for _, folder := range folders {
-		if folder.OrgId == orgID {
-			resFolder = append(resFolder, folder)
+		if folder.OrgId == orgID { // Checks if the folder's organization ID matches the provided 'orgID'.
+			resFolder = append(resFolder, folder) // Appends the pointer to the matching Folder to 'resFolder'.
 		}
 	}
-	// It returns resFolder and nil.
+	//Returns the filtered slice and a nil error
 	return resFolder, nil
 }
