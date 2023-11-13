@@ -92,4 +92,58 @@ func TestGetPaginatedAllFolders(t *testing.T) {
 		assert.Empty(t, nextResp.NextCursor)
 	})
 
+	//
+	// 	t.Run("Paginate Beyond Data Set", func(t *testing.T) {
+	// 		// Request the first page
+	// 		req := &folders.PaginatedFetchFolderRequest{
+	// 			OrgID:  orgID,
+	// 			Limit:  1,
+	// 			Cursor: "",
+	// 		}
+	// 		resp, _ := folders.GetPaginatedAllFolders(req)
+	//
+	// 		// Request a page beyond the available data
+	// 		nextReq := &folders.PaginatedFetchFolderRequest{
+	// 			OrgID:  orgID,
+	// 			Limit:  1,
+	// 			Cursor: resp.NextCursor,
+	// 		}
+	// 		nextResp, err := folders.GetPaginatedAllFolders(nextReq)
+	// 		assert.NoError(t, err)
+	// 		assert.NotNil(t, nextResp)
+	//
+	// 		// Since we only have 2 folders, and we're requesting the third page, it should be empty
+	// 		assert.Empty(t, nextResp.Folders)
+	// 		// The next cursor should also be empty since there is no more data
+	// 		assert.Empty(t, nextResp.NextCursor)
+	// 	})
+
+	t.Run("Invalid Cursor Token", func(t *testing.T) {
+		// Request with an invalid cursor token
+		req := &folders.PaginatedFetchFolderRequest{
+			OrgID:  orgID,
+			Limit:  1,
+			Cursor: "invalidCursor",
+		}
+		_, err := folders.GetPaginatedAllFolders(req)
+		// We expect an error due to the invalid cursor
+		assert.Error(t, err)
+	})
+
+	t.Run("Limit Larger Than Data Set", func(t *testing.T) {
+		// Request with a limit larger than the data set
+		req := &folders.PaginatedFetchFolderRequest{
+			OrgID:  orgID,
+			Limit:  10, // Large limit to fetch all data in one go
+			Cursor: "",
+		}
+		resp, err := folders.GetPaginatedAllFolders(req)
+		assert.NoError(t, err)
+		assert.NotNil(t, resp)
+		// We expect to get all folders since the limit exceeds the number of available folders
+		assert.Len(t, resp.Folders, 2)
+		// Since all data is fetched, the next cursor should be empty
+		assert.Empty(t, resp.NextCursor)
+	})
+
 }
