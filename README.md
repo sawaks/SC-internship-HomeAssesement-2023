@@ -1,8 +1,10 @@
-# sc-interns-2023
+# SC-internship-HomeAssesement-2023
 
-The technical take home for SC interns of 2023.
+## Description
+This is the completed version of the technical take home for SC interns of 2023.
+We need to follow instructions wich has below and commit to merge the repository.
 
-## Compile instruction
+## Usage
 
 Requires `Go` >= `1.20`
 
@@ -11,6 +13,11 @@ follow the official install instruction: [Golang Installation](https://go.dev/do
 To run the code on your local machine
 ```
   go run main.go
+```
+
+To run the code for the test 
+```
+  go test -v ./folders
 ```
 
 ## Folder structure
@@ -24,6 +31,9 @@ To run the code on your local machine
     | folders.go
     | folders_test.go
     | static.go
+    | folders_pagination.go
+    | folders_pagination_helper.go
+    | types.go
 ```
 
 ## Instructions
@@ -42,37 +52,12 @@ To run the code on your local machine
   - You can copy over the existing methods into `folders_pagination.go` to get started.
   - Write a short explanation on why you choosen the solution you implemented.
 
-## What is pagination?
-  - Pagination helps break down a large dataset into smaller chunks.
-  - The small data chunk will then be served to the client side usually accompanied a token that points to the next chunk.
-  - The end result could potentially look like this:
-```
-  original data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  
-  The current result will look like this:
-  { data: [1, 2, 3, ..., 10] }
-  
-  With pagination implementation, the result may look like this:
-  request() -> { data: [1, 2], token: "nQsjz" }
-
-  The token can then be used to fetch more result:
-  
-  request("nQsjz") -> { data : [3, 4], token: "uJsnQ" }
-
-  .
-  .
-  .
-
-  And more results until there's no data left:
-  
-  { data: [9, 10], token: "" }
-```
-
-## Submission
-
-Create a repo in your chosen git repository (make sure it is public so we can access it) and reply with the link to your code. We recommend using Github. 
+    I've research between the different types such as offset-based, cursor-based, keyset and seek method and considering the Requirements I decided to go with the cursor-based.
+    I believe it is a good fit for this assignment because it is efficient for the server as there is no counting of rows and can handles the potential of new data well.
 
 
-## Contact
+## Technologies
+go
 
-If you have any questions feel free to contact us at: interns@safetyculture.io# SC-internship-HomeAssesement-2023
+## GitHub Repository Link
+https://github.com/sawaks/SC-internship-HomeAssesement-2023.git
